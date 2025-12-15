@@ -1,27 +1,19 @@
-name: GHCR CI
-permissions: write-all
+name: Sync to Hugging Face hub
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
-  build:
+  sync-to-hub:
     runs-on: ubuntu-latest
-
     steps:
-    - name: lowercase repository name
-      run: echo "IMAGE_NAME=${GITHUB_REPOSITORY@L}" >> ${GITHUB_ENV}
-      
-    - uses: actions/checkout@v4
-
-    - name: Log in to GitHub Container Registry
-      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag ghcr.io/${{ env.IMAGE_NAME }}:latest
-
-    - name: Push the Docker image
-      run: docker push ghcr.io/${{ env.IMAGE_NAME }}:latest
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          lfs: true
+      - name: Push to hub
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        # CHANGE THE LINK BELOW TO YOUR HUGGING FACE SPACE ADDRESS
+        run: git push --force https://ubaidqamar:${HF_TOKEN}@huggingface.co/spaces/Obiiqmr/gemini2a main
