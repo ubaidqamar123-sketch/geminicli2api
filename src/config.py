@@ -291,9 +291,9 @@ def get_thinking_budget(model_name):
         elif "gemini-2.5-pro" in base_model:
             return 32768
         elif "gemini-3-pro" in base_model:
-            return 45000
+            return 32768
         elif "gemini-3.1-pro" in base_model:
-            return 65000
+            return 32768
     else:
         # Default thinking budget for regular models
         return -1  # Default for all models
